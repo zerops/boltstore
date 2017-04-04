@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/boltdb/bolt"
-	"github.com/eventsource-pkg/boltstore"
-	"github.com/eventsource-pkg/eventsource"
 	"github.com/stretchr/testify/assert"
+	"github.com/zerops/boltstore"
+	"github.com/zerops/eventsource"
 )
 
 type User struct {
@@ -54,8 +54,13 @@ func TestStore(t *testing.T) {
 	store, err := boltstore.New(db)
 	assert.Nil(t, err)
 
-	repo := eventsource.New(&User{}, eventsource.WithStore(store))
-	repo.Bind(UserCreated{}, UserEmailSet{})
+	repo := eventsource.New(&User{},
+		eventsource.WithStore(store),
+		eventsource.WithSerializer(eventsource.NewJSONSerializer(
+			UserCreated{},
+			UserEmailSet{},
+		)),
+	)
 
 	ctx := context.Background()
 	aggregateID := strconv.FormatInt(time.Now().UnixNano(), 36)

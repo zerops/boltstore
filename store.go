@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/boltdb/bolt"
-	"github.com/eventsource-pkg/eventsource"
+	"github.com/zerops/eventsource"
 )
 
 var (
